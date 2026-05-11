@@ -1,4 +1,3 @@
-// Program.cs
 using ContactsManager.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,10 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Registrar o DbContext
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? throw new InvalidOperationException(
+                           "Connection string 'DefaultConnection' nao configurada. Use User Secrets ou variaveis de ambiente.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration
-        .GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
